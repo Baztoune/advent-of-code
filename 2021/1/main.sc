@@ -2015,8 +2015,25 @@ val input =
 
 def part1(input: String) = {
   val rows = input.split('\n').filterNot(_.trim.isEmpty).map(_.toInt)
-  rows.zipWithIndex.collect { case (row, index) if index > 0 && row > rows(index - 1) => row }.length
+  rows
+    .zipWithIndex
+    .collect { case (row, index) if index > 0 && row > rows(index - 1) => row }
+    .length
 }
 
 println(part1(demoInput))
 println(part1(input))
+
+def part2(input: String) = {
+  val rows = input.split('\n').filterNot(_.trim.isEmpty).map(_.toInt)
+    .sliding(3)
+    .map(_.sum).toList
+  rows
+    .zipWithIndex
+    .collect { case (row, index) if index > 0 && row > rows(index - 1) => row }
+    .length
+}
+
+println(part2(demoInput))
+println(part2(input))
+
