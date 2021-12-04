@@ -2021,8 +2021,8 @@ def part1(input: String) = {
     .length
 }
 
-println(part1(demoInput))
-println(part1(input))
+part1(demoInput)
+part1(input)
 
 def part2(input: String) = {
   val rows = input.split('\n').filterNot(_.trim.isEmpty).map(_.toInt)
@@ -2034,6 +2034,5 @@ def part2(input: String) = {
     .length
 }
 
-println(part2(demoInput))
-println(part2(input))
-
+part2(demoInput)
+part2(input)
