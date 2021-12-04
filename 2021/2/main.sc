@@ -1026,3 +1026,20 @@ def part1(input: String) = {
 
 println(part1(demoInput))
 println(part1(input))
+
+
+def part2(input: String) = {
+  val rows = input.split('\n').filterNot(_.trim.isEmpty)
+  val steps = rows
+    .collect { case stepRegex(action, value) => (action, value.toInt) }
+  val (x, depth, aim) = steps.foldLeft((0, 0, 0)) {
+    case ((x, depth, aim), ("forward", value)) => (x + value, depth + (aim * value), aim)
+    case ((x, depth, aim), ("down", value)) => (x, depth, aim + value)
+    case ((x, depth, aim), ("up", value)) => (x, depth, aim - value)
+  }
+
+  x * depth
+}
+
+println(part2(demoInput))
+println(part2(input))
