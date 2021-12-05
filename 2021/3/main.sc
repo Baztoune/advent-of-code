@@ -1,4 +1,5 @@
 import java.lang.Integer.parseInt
+import scala.annotation.tailrec
 
 val demoInput =
   s"""00100
@@ -1019,9 +1020,9 @@ val input =
      |""".stripMargin
 
 
-def mostCommonValue[T](values:Seq[T]) = {
-  values.groupBy(identity).maxBy(_._2.length)._1
-}
+def mostCommonValue[T](values: Seq[T]) = values.groupBy(identity).maxBy(_._2.length)._1
+def leastCommonValue[T](values: Seq[T]) = values.groupBy(identity).minBy(_._2.length)._1
+def hasDominantValue[T](values: Seq[T]) = values.groupBy(identity).map(_._2.length).toSeq.distinct.length > 1
 
 def part1(input: String) = {
   val rows = input.split('\n').filterNot(_.trim.isEmpty)
@@ -1031,10 +1032,34 @@ def part1(input: String) = {
     val nthBits = rows.map(_.charAt(bitPosition))
     mostCommonValue(nthBits)
   }.mkString
-  val epsilonBits = gammaBits.map(v=> if(v=='0') '1' else '0').mkString
+  val epsilonBits = gammaBits.map(v => if (v == '0') '1' else '0').mkString
 
   parseInt(gammaBits, 2) * parseInt(epsilonBits, 2)
 }
 
 part1(demoInput)
 part1(input)
+
+@tailrec
+def recursiveFilter(entries: Seq[String], criteria: Seq[Char] => Char, bitPosition: Int = 0): String = {
+  val nthBits = entries.map(_.charAt(bitPosition))
+  val filtered = entries.filter(entry => entry.charAt(bitPosition) == criteria(nthBits))
+
+  if (filtered.length > 1) recursiveFilter(filtered, criteria, bitPosition + 1)
+  else filtered.head
+}
+
+val oxygenCriteria = (bits: Seq[Char]) => if (hasDominantValue(bits)) mostCommonValue(bits) else '1'
+val co2Criteria = (bits: Seq[Char]) => if (hasDominantValue(bits)) leastCommonValue(bits) else '0'
+
+def part2(input: String) = {
+  val rows = input.split('\n').filterNot(_.trim.isEmpty)
+
+  val oxygenBits = recursiveFilter(rows, oxygenCriteria)
+  val co2Bits = recursiveFilter(rows, co2Criteria)
+
+  parseInt(oxygenBits, 2) * parseInt(co2Bits, 2)
+}
+
+part2(demoInput)
+part2(input)
