@@ -646,13 +646,20 @@ object Board {
 }
 
 case class Game(numbers: Seq[Int], boards: Seq[Board]) {
-   def play(turn: Int = 1): Int = numbers.slice(0, turn) match {
+  def play(turn: Int = 1): Int = numbers.slice(0, turn) match {
     case Nil => 0
     case playedNumbers =>
       val winningBoards = boards.filter(_.hasWon(playedNumbers))
       if (winningBoards.nonEmpty) winningBoards.head.score(playedNumbers)
       else play(turn + 1)
   }
+
+  def playToLose() = numbers.indices.foldLeft(Seq.empty[(Board,Int)]) {
+    (acc, index) => {
+      val playedNumbers = numbers.slice(0, index)
+      acc ++ boards.filterNot(acc.map(_._1).contains).filter(_.hasWon(playedNumbers)).map(board=>(board,board.score(playedNumbers)))
+    }
+  }.map(_._2).last
 }
 
 object Game {
@@ -666,8 +673,11 @@ object Game {
   }
 }
 
-def part1(input: String) = Game(input).play()
+
+Game(demoInput).play()
+Game(input).play()
+
+Game(demoInput).playToLose()
+Game(input).playToLose()
 
 
-part1(demoInput)
-part1(input)
