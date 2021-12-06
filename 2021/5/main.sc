@@ -1,5 +1,4 @@
-import java.lang.Math.{max, min}
-import scala.collection.immutable
+import java.lang.Math.{abs, pow, sqrt}
 import scala.io.Source
 
 val demoInput =
@@ -517,37 +516,59 @@ val input =
     |952,242 -> 178,242
     |""".stripMargin
 
-case class Segment(x1: Int, y1: Int, x2: Int, y2: Int) {
-  def contains(point: (Int, Int)) = {
-    val (x, y) = point
-    min(x1, x2) <= x && x <= max(x1, x2) && min(y1, y2) <= y && y <= max(y1, y2)
+case class Point(x: Int, y: Int)
+
+def distance(a: Point, b: Point): Double = sqrt(pow(a.x - b.x, 2) + pow(a.y - b.y, 2))
+
+case class Segment(a: Point, b: Point) {
+  def contains(c: Point) = {
+    val diff = distance(a, b) - distance(a, c) - distance(c, b)
+    abs(diff) <= 0.00001
   }
 
-  val isHorizontalOrVertical = x1 == x2 || y1 == y2
+  val isHorizontalOrVertical = a.x == b.x || a.y == b.y
 }
+
 
 object Segment {
   val segmentRegex = "(\\d+),(\\d+) -> (\\d+),(\\d+)".r
 
   def apply(input: String): Segment = input match {
-    case segmentRegex(x1, y1, x2, y2) => Segment(x1.toInt, y1.toInt, x2.toInt, y2.toInt)
+    case segmentRegex(x1, y1, x2, y2) => Segment(Point(x1.toInt, y1.toInt), Point(x2.toInt, y2.toInt))
   }
 }
 
 def part1(input: String) = {
   val rows = Source.fromString(input).getLines().toList
   val segments = rows.map(Segment(_)).filter(_.isHorizontalOrVertical)
-  val xMax = (segments.map(_.x1) ++ segments.map(_.x2)).max
-  val yMax = (segments.map(_.y1) ++ segments.map(_.y2)).max
+  val xMax = (segments.map(_.a.x) ++ segments.map(_.b.x)).max
+  val yMax = (segments.map(_.a.y) ++ segments.map(_.b.y)).max
 
-  val points: immutable.Seq[(Int, Int)] = for {
+  val points = for {
     x <- 0 to xMax
     y <- 0 to yMax
-    if segments.count(_.contains((x, y))) >= 2
-  } yield (x, y)
+  } yield segments.count(_.contains(Point(x, y)))
 
-  points.length
+  points.count(_>=2)
 }
 
-part1(demoInput)
-part1(input)
+assert(part1(demoInput) == 5)
+assert(part1(input) == 7438)
+
+def part2(input: String) = {
+  val rows = Source.fromString(input).getLines().toList
+  val segments = rows.map(Segment(_))
+  val xMax = (segments.map(_.a.x) ++ segments.map(_.b.x)).max
+  val yMax = (segments.map(_.a.y) ++ segments.map(_.b.y)).max
+
+  val points = for {
+    y <- 0 to yMax
+    x <- 0 to xMax
+  } yield segments.count(_.contains(Point(x, y)))
+
+  points.count(_ >= 2)
+}
+
+assert(part2(demoInput) == 12)
+assert(part2(input) == 21406)
+
