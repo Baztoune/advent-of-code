@@ -1,4 +1,4 @@
-
+import scala.annotation.tailrec
 
 val sample =
   """3,4,3,1,2""".stripMargin
@@ -36,3 +36,20 @@ def part1(input: String) = {
 
 assert(part1(sample) == 5934)
 assert(part1(input) == 362639)
+
+def part2(input: String) = {
+  val initialState = input.split(",").map(_.toInt).map(Fish(_))
+  val nbRounds = 256
+
+  @tailrec
+  def nextIteration(acc: Seq[Fish], nbRoundsLeft: Int): Seq[Fish] = {
+    if (nbRoundsLeft > 0) nextIteration(acc.flatMap(_.next()), nbRoundsLeft - 1)
+    else acc
+  }
+
+  nextIteration(initialState, nbRounds).length
+}
+
+
+val a = part2(sample)
+println(s"HUHU a=$a")
