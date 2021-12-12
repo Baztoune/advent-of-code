@@ -1,4 +1,4 @@
-val demoInput =
+val sample =
   s"""199
      |200
      |208
@@ -2021,7 +2021,7 @@ def part1(input: String) = {
     .length
 }
 
-part1(demoInput)
+part1(sample)
 part1(input)
 
 def part2(input: String) = {
@@ -2034,5 +2034,5 @@ def part2(input: String) = {
     .length
 }
 
-part2(demoInput)
+part2(sample)
 part2(input)

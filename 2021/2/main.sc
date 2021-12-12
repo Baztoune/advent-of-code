@@ -1,4 +1,4 @@
-val demoInput =
+val sample =
   s"""forward 5
      |down 5
      |forward 8
@@ -1024,7 +1024,7 @@ def part1(input: String) = {
   x * depth
 }
 
-part1(demoInput)
+part1(sample)
 part1(input)
 
 
@@ -1041,5 +1041,5 @@ def part2(input: String) = {
   x * depth
 }
 
-part2(demoInput)
+part2(sample)
 part2(input)

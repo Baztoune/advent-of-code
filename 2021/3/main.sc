@@ -1,7 +1,7 @@
 import java.lang.Integer.parseInt
 import scala.annotation.tailrec
 
-val demoInput =
+val sample =
   s"""00100
      |11110
      |10110
@@ -1037,7 +1037,7 @@ def part1(input: String) = {
   parseInt(gammaBits, 2) * parseInt(epsilonBits, 2)
 }
 
-part1(demoInput)
+part1(sample)
 part1(input)
 
 @tailrec
@@ -1061,5 +1061,5 @@ def part2(input: String) = {
   parseInt(oxygenBits, 2) * parseInt(co2Bits, 2)
 }
 
-part2(demoInput)
+part2(sample)
 part2(input)

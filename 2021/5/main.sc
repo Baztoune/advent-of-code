@@ -1,7 +1,7 @@
 import java.lang.Math.{abs, pow, sqrt}
 import scala.io.Source
 
-val demoInput =
+val sample =
   """0,9 -> 5,9
     |8,0 -> 0,8
     |9,4 -> 3,4
@@ -552,7 +552,7 @@ def part1(input: String) = {
   points.count(_>=2)
 }
 
-assert(part1(demoInput) == 5)
+assert(part1(sample) == 5)
 assert(part1(input) == 7438)
 
 def part2(input: String) = {
@@ -569,6 +569,6 @@ def part2(input: String) = {
   points.count(_ >= 2)
 }
 
-assert(part2(demoInput) == 12)
+assert(part2(sample) == 12)
 assert(part2(input) == 21406)
 
